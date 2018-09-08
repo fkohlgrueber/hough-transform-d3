@@ -90,6 +90,7 @@ svg2.append("text")
     .attr("font-size", "10pt")
     .text("d");
 
+
 // points in first graph
 
 svg.selectAll("circle")
@@ -121,12 +122,16 @@ function insert_point(selection){
       .attr("fill", p => p[2])
       .on("click", delete_point)
       .call(d3.drag()
-              .on("drag", dragged));
+              .on("drag", dragged)
+              .on("start", handleMouseOut)
+              .on("end", handleMouseOver));
   update_points();
 }
 
 function dragged(d) {
-  d3.select(this).attr("cx", d3.event.x).attr("cy", d3.event.y);
+  let x = Math.max(xScale(-10), Math.min(xScale(10), d3.event.x));
+  let y = Math.max(yScale(10), Math.min(yScale(-10), d3.event.y));
+  d3.select(this).attr("cx", x).attr("cy", y);
   update_points();
 }
 
