@@ -271,43 +271,21 @@ function insertLines2(){
      .attr("id", "hover-line-2")
      .attr("stroke", "red")
      .attr("stroke-width", 1.5)
-     .attr("x1", xScale(0))
-     .attr("y1", yScale(0))
-     .attr("x2", xScale(0))
-     .attr("y2", yScale(0));
   svg.append("line")
      .attr("id", "hover-line-3")
      .attr("stroke", "#444")
      .attr("stroke-width", 1.5)
-     .attr("x1", xScale(0))
-     .attr("y1", yScale(0))
-     .attr("x2", xScale(0))
-     .attr("y2", yScale(0));
   svg2.append("line")
      .attr("id", "hover-line-4")
      .attr("stroke", "red")
      .attr("stroke-width", 1.5)
-     .attr("x1", xScale(0))
-     .attr("y1", yScale(0))
-     .attr("x2", xScale(0))
-     .attr("y2", yScale(0));
   svg2.append("line")
      .attr("id", "hover-line-5")
      .attr("stroke", "green")
      .attr("stroke-width", 1.5)
-     .attr("x1", xScale(0))
-     .attr("y1", yScale(0))
-     .attr("x2", xScale(0))
-     .attr("y2", yScale(0));
   svg.append("path").attr("id", "hover-arc")
       .attr("fill", "none").attr("stroke-width", 1.5)
       .attr("stroke", "green")
-      .attr("d", d3.arc()
-                   .innerRadius(Math.abs(3))
-                   .outerRadius(Math.abs(3))
-     .startAngle(0)
-     .endAngle(0)
-   )
   }
 
   function handleMouseOver2(){
@@ -316,6 +294,7 @@ function insertLines2(){
   }
 
   function handleMouseMove2() {
+    calcHoverLines2(5, 5);
     calcHoverLines2(xScale2.invert(d3.mouse(this)[0]), yScale2.invert(d3.mouse(this)[1]));
   }
 
