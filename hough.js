@@ -223,7 +223,10 @@
 
   svg2.on("mouseenter", handleMouseOver2)
      .on("mousemove", handleMouseMove2)
-     .on("mouseleave", handleMouseOut2);
+     .on("mouseleave", handleMouseOut2)
+     .on("touchstart", handleMouseOver2)
+     .on("touchmove", handleMouseMove2)
+     .on("touchout", handleMouseOut2);
 
   function calcHoverLines2(theta, d) {
     var p2 = [Math.cos(theta*2*Math.PI/360)*d, Math.sin(theta*2*Math.PI/360)*d];
