@@ -221,12 +221,12 @@
 
   // hovering the second graphs
 
-  svg2.on("mouseenter", handleMouseOver2)
-     .on("mousemove", handleMouseMove2)
-     .on("mouseleave", handleMouseOut2)
-     .on("touchstart", handleTouchStart2)
-     .on("touchmove", handleTouchMove2)
-     .on("touchend", handleTouchEnd2);
+  svg2.on("touchstart", handleTouchStart2)
+      .on("touchmove", handleTouchMove2)
+      .on("touchend", handleTouchEnd2)
+      .on("mouseenter", handleMouseOver2)
+      .on("mousemove", handleMouseMove2)
+      .on("mouseleave", handleMouseOut2);
 
   function calcHoverLines2(theta, d) {
     var p2 = [Math.cos(theta*2*Math.PI/360)*d, Math.sin(theta*2*Math.PI/360)*d];
@@ -271,21 +271,42 @@ function insertLines2(){
      .attr("id", "hover-line-2")
      .attr("stroke", "red")
      .attr("stroke-width", 1.5)
+     .attr("x1", xScale(0))
+     .attr("y1", yScale(0))
+     .attr("x2", xScale(0))
+     .attr("y2", yScale(0));
   svg.append("line")
      .attr("id", "hover-line-3")
      .attr("stroke", "#444")
      .attr("stroke-width", 1.5)
+     .attr("x1", xScale(0))
+     .attr("y1", yScale(0))
+     .attr("x2", xScale(0))
+     .attr("y2", yScale(0));
   svg2.append("line")
      .attr("id", "hover-line-4")
      .attr("stroke", "red")
      .attr("stroke-width", 1.5)
+     .attr("x1", xScale(0))
+     .attr("y1", yScale(0))
+     .attr("x2", xScale(0))
+     .attr("y2", yScale(0));
   svg2.append("line")
      .attr("id", "hover-line-5")
      .attr("stroke", "green")
      .attr("stroke-width", 1.5)
+     .attr("x1", xScale(0))
+     .attr("y1", yScale(0))
+     .attr("x2", xScale(0))
+     .attr("y2", yScale(0));
   svg.append("path").attr("id", "hover-arc")
       .attr("fill", "none").attr("stroke-width", 1.5)
       .attr("stroke", "green")
+      .attr("d", d3.arc()
+                   .innerRadius(Math.abs(3))
+                   .outerRadius(Math.abs(3))
+     .startAngle(0)
+     .endAngle(0)
   }
 
   function handleMouseOver2(){
