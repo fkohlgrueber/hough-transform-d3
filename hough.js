@@ -224,9 +224,9 @@
   svg2.on("mouseenter", handleMouseOver2)
      .on("mousemove", handleMouseMove2)
      .on("mouseleave", handleMouseOut2)
-     .on("touchstart", handleMouseOver2)
+     .on("touchstart", handleTouchStart2)
      .on("touchmove", handleTouchMove2)
-     .on("touchend", handleMouseOut2);
+     .on("touchend", handleTouchEnd2);
 
   function calcHoverLines2(theta, d) {
     var p2 = [Math.cos(theta*2*Math.PI/360)*d, Math.sin(theta*2*Math.PI/360)*d];
@@ -266,33 +266,45 @@
       ).attr("transform", "translate("+xScale(0)+","+yScale(0)+")")
   }
 
+function insertLines2(){
+  svg.append("line")
+     .attr("id", "hover-line-2")
+     .attr("stroke", "red")
+     .attr("stroke-width", 1.5)
+  svg.append("line")
+     .attr("id", "hover-line-3")
+     .attr("stroke", "#444")
+     .attr("stroke-width", 1.5)
+  svg2.append("line")
+     .attr("id", "hover-line-4")
+     .attr("stroke", "red")
+     .attr("stroke-width", 1.5)
+  svg2.append("line")
+     .attr("id", "hover-line-5")
+     .attr("stroke", "green")
+     .attr("stroke-width", 1.5)
+  svg.append("path").attr("id", "hover-arc")
+      .attr("fill", "none").attr("stroke-width", 1.5)
+      .attr("stroke", "green")
+  }
+
   function handleMouseOver2(){
-    svg.append("line")
-       .attr("id", "hover-line-2")
-       .attr("stroke", "red")
-       .attr("stroke-width", 1.5)
-    svg.append("line")
-       .attr("id", "hover-line-3")
-       .attr("stroke", "#444")
-       .attr("stroke-width", 1.5)
-    svg2.append("line")
-       .attr("id", "hover-line-4")
-       .attr("stroke", "red")
-       .attr("stroke-width", 1.5)
-    svg2.append("line")
-       .attr("id", "hover-line-5")
-       .attr("stroke", "green")
-       .attr("stroke-width", 1.5)
-    svg.append("path").attr("id", "hover-arc")
-        .attr("fill", "none").attr("stroke-width", 1.5)
-        .attr("stroke", "green")
-    calcHoverLines2(xScale2.invert(d3.mouse(this)[0]), yScale2.invert(d3.mouse(this)[1]));
+    insertLines2();
+    handleMouseMove2();
   }
 
   function handleMouseMove2() {
     calcHoverLines2(xScale2.invert(d3.mouse(this)[0]), yScale2.invert(d3.mouse(this)[1]));
   }
+
+  function handleTouchStart2(){
+    insertLines2();
+    handleTouchMove2();
+  }
+
   function handleTouchMove2() {
+    d3.event.preventDefault();
+    d3.event.stopPropagation();
     calcHoverLines2(xScale2.invert(d3.touches(this)[0][0]), yScale2.invert(d3.touches(this)[0][1]));
   }
 
