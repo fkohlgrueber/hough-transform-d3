@@ -7,6 +7,7 @@
   let padding = 10;
   let data = [[5, 5, "black"]];
   let c = 0; // color index
+  let last_touch_y_pos = 0;
 
   // function performing the actual hough transform
   function r(theta, x, y) {
@@ -312,14 +313,26 @@ function insertLines2(theta, d){
     console.log("start")
     d3.event.preventDefault();
     d3.event.stopPropagation();
-    insertLines2(xScale2.invert(d3.touches(this)[0][0]), yScale2.invert(d3.touches(this)[0][1])+4);
+    if (d3.touches(this).length == 1){
+      insertLines2(xScale2.invert(d3.touches(this)[0][0]), yScale2.invert(d3.touches(this)[0][1])+4);
+    }else if (d3.touches(this).length == 2){
+      last_touch_y_pos = (d3.touches(this)[0][1] + d3.touches(this)[1][1])/2;
+    }
   }
 
   function handleTouchMove2() {
     console.log("move")
     d3.event.preventDefault();
     d3.event.stopPropagation();
-    calcHoverLines2(xScale2.invert(d3.touches(this)[0][0]), yScale2.invert(d3.touches(this)[0][1])+4);
+    if (d3.touches(this).length == 1){
+      calcHoverLines2(xScale2.invert(d3.touches(this)[0][0]), yScale2.invert(d3.touches(this)[0][1])+4);
+    }else if (d3.touches(this).length == 2){
+      let touch_y_pos = (d3.touches(this)[0][1] + d3.touches(this)[1][1])/2;
+      let diff = touch_y_pos - last_touch_y_pos;
+      console.console.log(document.documentElement.scrollTop);
+      document.documentElement.scrollTop += diff;
+      last_touch_y_pos = touch_y_pos;
+    }
   }
 
   function handleTouchEnd2() {
