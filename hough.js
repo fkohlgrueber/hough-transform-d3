@@ -319,7 +319,7 @@ function insertLines2(theta, d){
       handleMouseOut2();
     }
     if (d3.touches(this).length == 2){
-      last_touch_y_pos = (d3.touches(this)[0][1] + d3.touches(this)[1][1])/2;
+      last_touch_y_pos = (d3.touches(document.body)[0][1] + d3.touches(document.body)[1][1])/2;
     }
   }
 
@@ -330,7 +330,7 @@ function insertLines2(theta, d){
     if (d3.touches(this).length == 1){
       calcHoverLines2(xScale2.invert(d3.touches(this)[0][0]), yScale2.invert(d3.touches(this)[0][1])+4);
     }else if (d3.touches(this).length == 2){
-      let touch_y_pos = (d3.touches(this)[0][1] + d3.touches(this)[1][1])/2;
+      let touch_y_pos = (d3.touches(document.body)[0][1] + d3.touches(document.body)[1][1])/2;
       let diff = touch_y_pos - last_touch_y_pos;
       console.log(document.documentElement.scrollTop, last_touch_y_pos);
       document.documentElement.scrollTop -= diff;
