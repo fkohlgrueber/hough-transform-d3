@@ -289,9 +289,9 @@ function insertLines2(){
   }
 
   function handleMouseOver2(){
-    console.log("mouse over", d3.mouse(this));
+    console.log("mouse over 2", d3.mouse(this));
     insertLines2();
-    handleMouseMove2();
+    //handleMouseMove2();
   }
 
   function handleMouseMove2() {
