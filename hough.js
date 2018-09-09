@@ -228,35 +228,45 @@
       .on("mousemove", handleMouseMove2)
       .on("mouseleave", handleMouseOut2);
 
-  function calcHoverLines2(theta, d) {
+  function calcHoverLines2(theta, d){
+    _calcHoverLines2(theta, d,
+      d3.selectAll("#hover-line-2"),
+      d3.selectAll("#hover-line-3"),
+      d3.selectAll("#hover-line-4"),
+      d3.selectAll("#hover-line-5"),
+      d3.selectAll("#hover-arc"),
+    )
+  }
+
+  function _calcHoverLines2(theta, d, l2, l3, l4, l5, larc) {
     var p2 = [Math.cos(theta*2*Math.PI/360)*d, Math.sin(theta*2*Math.PI/360)*d];
     var p3 = [p2[0] + Math.cos((theta-90)*2*Math.PI/360)*30,
               p2[1] + Math.sin((theta-90)*2*Math.PI/360)*30]
     var p4 = [p2[0] + Math.cos((theta+90)*2*Math.PI/360)*30,
               p2[1] + Math.sin((theta+90)*2*Math.PI/360)*30]
-    d3.selectAll("#hover-line-2")
+    l2
         .attr("x1", xScale(0))
         .attr("y1", yScale(0))
         .attr("x2", xScale(p2[0]))
         .attr("y2", yScale(p2[1]));
-    d3.selectAll("#hover-line-3")
+    l3
         .attr("x1", xScale(p3[0]))
         .attr("y1", yScale(p3[1]))
         .attr("x2", xScale(p4[0]))
         .attr("y2", yScale(p4[1]));
-    d3.selectAll("#hover-line-4")
+    l4
         .attr("x1", xScale2(theta))
         .attr("y1", yScale2(0))
         .attr("x2", xScale2(theta))
         .attr("y2", yScale2(d));
-    d3.selectAll("#hover-line-5")
+    l5
         .attr("x1", xScale2(0))
         .attr("y1", yScale2(0))
         .attr("x2", xScale2(theta))
         .attr("y2", yScale2(0));
     let rad = xScale(d)-xScale(0);
     let offset = rad < 0 ? -90: 90;
-    d3.selectAll("#hover-arc")
+    larc
         .attr("d", d3.arc()
                      .innerRadius(Math.abs(rad))
                      .outerRadius(Math.abs(rad))
@@ -266,32 +276,32 @@
       ).attr("transform", "translate("+xScale(0)+","+yScale(0)+")")
   }
 
-function insertLines2(){
-  svg.append("line")
+function insertLines2(theta, d){
+  l2 = svg.append("line")
      .attr("id", "hover-line-2")
      .attr("stroke", "red")
      .attr("stroke-width", 1.5)
-  svg.append("line")
+  l3 = svg.append("line")
      .attr("id", "hover-line-3")
      .attr("stroke", "#444")
      .attr("stroke-width", 1.5)
-  svg2.append("line")
+  l4 = svg2.append("line")
      .attr("id", "hover-line-4")
      .attr("stroke", "red")
      .attr("stroke-width", 1.5)
-  svg2.append("line")
+  l5 = svg2.append("line")
      .attr("id", "hover-line-5")
      .attr("stroke", "green")
      .attr("stroke-width", 1.5)
-  svg.append("path").attr("id", "hover-arc")
+  larc = svg.append("path").attr("id", "hover-arc")
       .attr("fill", "none").attr("stroke-width", 1.5)
       .attr("stroke", "green")
-  }
+  _calcHoverLines2(theta, d, l2, l3, l4, l5, larc)
+}
 
   function handleMouseOver2(){
     console.log("mouse over 2", d3.mouse(this));
-    insertLines2();
-    //handleMouseMove2();
+    insertLines2(xScale2.invert(d3.mouse(this)[0]), yScale2.invert(d3.mouse(this)[1]));
   }
 
   function handleMouseMove2() {
@@ -300,8 +310,9 @@ function insertLines2(){
 
   function handleTouchStart2(){
     console.log("start")
-    insertLines2();
-    handleTouchMove2();
+    d3.event.preventDefault();
+    d3.event.stopPropagation();
+    insertLines2(xScale2.invert(d3.touches(this)[0][0]), yScale2.invert(d3.touches(this)[0][1])+4);
   }
 
   function handleTouchMove2() {
