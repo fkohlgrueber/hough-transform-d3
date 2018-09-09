@@ -308,6 +308,12 @@ function insertLines2(){
     calcHoverLines2(xScale2.invert(d3.touches(this)[0][0]), yScale2.invert(d3.touches(this)[0][1]));
   }
 
+  function handleTouchEnd2() {
+    d3.event.preventDefault();
+    d3.event.stopPropagation();
+    handleMouseOut2();
+  }
+
   function handleMouseOut2(){
     d3.selectAll("#hover-line-2").remove();
     d3.selectAll("#hover-line-3").remove();
