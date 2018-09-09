@@ -315,7 +315,10 @@ function insertLines2(theta, d){
     d3.event.stopPropagation();
     if (d3.touches(this).length == 1){
       insertLines2(xScale2.invert(d3.touches(this)[0][0]), yScale2.invert(d3.touches(this)[0][1])+4);
-    }else if (d3.touches(this).length == 2){
+    }else {
+      handleMouseOut2();
+    }
+    if (d3.touches(this).length == 2){
       last_touch_y_pos = (d3.touches(this)[0][1] + d3.touches(this)[1][1])/2;
     }
   }
@@ -329,7 +332,7 @@ function insertLines2(theta, d){
     }else if (d3.touches(this).length == 2){
       let touch_y_pos = (d3.touches(this)[0][1] + d3.touches(this)[1][1])/2;
       let diff = touch_y_pos - last_touch_y_pos;
-      console.console.log(document.documentElement.scrollTop);
+      console.log(document.documentElement.scrollTop);
       document.documentElement.scrollTop += diff;
       last_touch_y_pos = touch_y_pos;
     }
