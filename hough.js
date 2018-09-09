@@ -298,17 +298,20 @@ function insertLines2(){
   }
 
   function handleTouchStart2(){
+    console.log("start")
     insertLines2();
     handleTouchMove2();
   }
 
   function handleTouchMove2() {
+    console.log("move")
     d3.event.preventDefault();
     d3.event.stopPropagation();
-    calcHoverLines2(xScale2.invert(d3.touches(this)[0][0]), yScale2.invert(d3.touches(this)[0][1]));
+    calcHoverLines2(xScale2.invert(d3.touches(this)[0][0]), yScale2.invert(d3.touches(this)[0][1])+4);
   }
 
   function handleTouchEnd2() {
+    console.log("end")
     d3.event.preventDefault();
     d3.event.stopPropagation();
     handleMouseOut2();
