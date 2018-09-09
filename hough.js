@@ -332,8 +332,8 @@ function insertLines2(theta, d){
     }else if (d3.touches(this).length == 2){
       let touch_y_pos = (d3.touches(this)[0][1] + d3.touches(this)[1][1])/2;
       let diff = touch_y_pos - last_touch_y_pos;
-      console.log(document.documentElement.scrollTop);
-      document.documentElement.scrollTop += diff;
+      console.log(document.documentElement.scrollTop, last_touch_y_pos);
+      document.documentElement.scrollTop -= diff;
       last_touch_y_pos = touch_y_pos;
     }
   }
