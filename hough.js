@@ -301,7 +301,6 @@ function insertLines2(theta, d){
 }
 
   function handleMouseOver2(){
-    console.log("mouse over 2", d3.mouse(this));
     insertLines2(xScale2.invert(d3.mouse(this)[0]), yScale2.invert(d3.mouse(this)[1]));
   }
 
@@ -332,7 +331,7 @@ function insertLines2(theta, d){
       let diff = touch_y_pos - last_touch_y_pos;
       console.log(document.documentElement.scrollTop, last_touch_y_pos);
       document.documentElement.scrollTop -= diff;
-      last_touch_y_pos = touch_y_pos;
+      last_touch_y_pos = touch_y_pos + diff;
     }
   }
 
