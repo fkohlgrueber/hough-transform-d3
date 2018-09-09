@@ -294,7 +294,6 @@ function insertLines2(){
   }
 
   function handleMouseMove2() {
-    calcHoverLines2(5, 5);
     calcHoverLines2(xScale2.invert(d3.mouse(this)[0]), yScale2.invert(d3.mouse(this)[1]));
   }
 
