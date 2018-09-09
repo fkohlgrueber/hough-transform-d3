@@ -307,6 +307,7 @@ function insertLines2(){
                    .outerRadius(Math.abs(3))
      .startAngle(0)
      .endAngle(0)
+   )
   }
 
   function handleMouseOver2(){
