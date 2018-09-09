@@ -225,8 +225,8 @@
      .on("mousemove", handleMouseMove2)
      .on("mouseleave", handleMouseOut2)
      .on("touchstart", handleMouseOver2)
-     .on("touchmove", handleMouseMove2)
-     .on("touchout", handleMouseOut2);
+     .on("touchmove", handleTouchMove2)
+     .on("touchend", handleMouseOut2);
 
   function calcHoverLines2(theta, d) {
     var p2 = [Math.cos(theta*2*Math.PI/360)*d, Math.sin(theta*2*Math.PI/360)*d];
@@ -291,6 +291,9 @@
 
   function handleMouseMove2() {
     calcHoverLines2(xScale2.invert(d3.mouse(this)[0]), yScale2.invert(d3.mouse(this)[1]));
+  }
+  function handleTouchMove2() {
+    calcHoverLines2(xScale2.invert(d3.touches(this)[0][0]), yScale2.invert(d3.touches(this)[0][1]));
   }
 
   function handleMouseOut2(){
