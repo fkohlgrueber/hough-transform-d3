@@ -3,42 +3,45 @@
   <head>
     <meta charset="utf-8">
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <style>
-      .hough-svg {
-        cursor: crosshair;
-        max-width: 500px;
+      .content {
+        max-width: 740px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 1em;
+      }
+      @media screen and (max-width: 400px) {
+        .wrapper {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="root" align="center">
-      <svg id="svg1" viewBox="0 0 300 300"
-        preserveAspectRatio="xMidYMid meet"
-        class="hough-svg"
-      ></svg>
-      <svg id="svg2" viewBox="0 0 300 300"
-        preserveAspectRatio="xMidYMid meet"
-        class="hough-svg"
-      ></svg>
-    </div>
+    <div class="content">
+      <h1>First Plot</h1>
 
-    <div class="root" align="center" style="">
-      <svg id="svg3" viewBox="0 0 300 300"
-        preserveAspectRatio="xMidYMid meet"
-        class="hough-svg"
-      ></svg>
-      <div style="display: inline-block">
-      <svg id="svg4" viewBox="0 0 300 300"
-        preserveAspectRatio="xMidYMid meet"
-        class="hough-svg"
-        style="position: absolute;"
-      ></svg>
-      <canvas id="mycanvas">
-      </canvas>
-      <div>
-    </div>
+      <div class="wrapper">
+        <div id="svg1"></div>
+        <div id="svg2"></div>
+      </div>
 
-    <script src="/hough-transform-d3/hough.js"></script>
-    <script src="/hough-transform-d3/hough_picture.js"></script>
+      <h1>Second Plot</h1>
+
+      <div class="wrapper">
+        <div id="svg3"></div>
+        <div id="svg4"></div>
+      </div>
+    </div>
+    <script src="hough_new.js"></script>
+    <script>
+      insert_hough_plots("#svg1", "#svg2")
+      insert_hough_plots_2("#svg3", "#svg4")
+    </script>
   </body>
 </html>
