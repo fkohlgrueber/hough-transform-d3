@@ -134,27 +134,114 @@ function insert_hough_plots(svg1_id, svg2_id){
   svg1.on("mouseenter", svg1MouseEnter)
 	    .on("mousemove", svg1MouseMove)
 			.on("mouseleave", svg1MouseLeave)
+			.on("touchstart", svg1TouchStart)
+			.on("touchmove", svg1TouchMove)
+			.on("touchend", svg1TouchEnd)
 
-	function svg1MouseEnter(){
-    svg2.append("path")
+	function svg1HoverInsertLines(x, y, show_point){
+		svg1_point = svg1.append("circle")
+				  .attr("id", svg1_id + "-hover-point")
+					.attr("display", show_point ? "initial": "none")
+					.attr("r", 5)
+					.attr("fill", "grey")
+		svg2_line = svg2.append("path")
           .attr("id", svg1_id + "-hover-line")
           .datum(d3.range(x_range2[0], x_range2[1], 1))
           .attr("fill", "none")
           .attr("stroke", "grey")
 					.style("stroke-dasharray", "3, 3")
           .attr("stroke-width", 1.5)
-          .attr("d", gen_hough_line(d3.mouse(this)[0], d3.mouse(this)[1]))
+		_svg1HoverSetHoverLinePos(x, y, svg1_point, svg2_line)
+	}
+
+	function _svg1HoverSetHoverLinePos(x, y,
+			svg1_point, svg2_line
+	){
+		svg1_point
+			.attr("cx", xScale1(x))
+			.attr("cy", yScale1(y))
+		svg2_line
+			.attr("d", d3.line()
+				.x(theta => xScale2(theta))
+				.y(theta => yScale2(
+						r(theta, x, y)
+					)
+				)
+			)
+	}
+
+	function svg1HoverSetHoverLinePos(x, y){
+		_svg1HoverSetHoverLinePos(x, y,
+			d3.select("#" +  svg1_id + "-hover-point"),
+			d3.select("#" +  svg1_id + "-hover-line")
+		)
+	}
+
+	function svg1HoverRemoveLines(){
+		d3.select("#" +  svg1_id + "-hover-line").remove();
+		d3.select("#" +  svg1_id + "-hover-point").remove();
+	}
+
+	function svg1MouseEnter(){
+    svg1HoverInsertLines(
+			xScale1.invert(d3.mouse(this)[0]),
+			yScale1.invert(d3.mouse(this)[1]),
+			false
+		)
   }
 
 	function svg1MouseMove(){
-		d3.select("#" +  svg1_id + "-hover-line")
-		  .attr("d", gen_hough_line(d3.mouse(this)[0], d3.mouse(this)[1]))
+		svg1HoverSetHoverLinePos(
+			xScale1.invert(d3.mouse(this)[0]),
+			yScale2.invert(d3.mouse(this)[1])
+		)
 	}
 
 	function svg1MouseLeave(){
-		d3.select("#" +  svg1_id + "-hover-line").remove();
+		svg1HoverRemoveLines();
 	}
 
+	function svg1TouchStart(){
+		d3.event.preventDefault();
+    d3.event.stopPropagation();
+    if (d3.touches(this).length == 1){
+      svg1HoverInsertLines(
+				xScale1.invert(d3.touches(this)[0][0]),
+				yScale1.invert(d3.touches(this)[0][1]) + 4,
+				true
+			);
+    }else {
+      svg1HoverRemoveLines();
+    }
+		// two finger scrolling
+		if (d3.touches(this).length == 2){
+			let touches = d3.touches(document.documentElement)
+			last_touch_y_pos = (touches[0][1] + touches[1][1]) / 2;
+    }
+	}
+
+	function svg1TouchEnd(){
+		d3.event.preventDefault();
+    d3.event.stopPropagation();
+    svg1HoverRemoveLines();
+	}
+
+	function svg1TouchMove(){
+		d3.event.preventDefault();
+    d3.event.stopPropagation();
+    if (d3.touches(this).length == 1){
+      svg1HoverSetHoverLinePos(
+				xScale1.invert(d3.touches(this)[0][0]),
+				yScale1.invert(d3.touches(this)[0][1]) + 4
+			);
+    }else if (d3.touches(this).length == 2){
+			// two finger scrolling
+			let touches = d3.touches(document.documentElement)
+      let touch_y_pos = (touches[0][1] + touches[1][1]) / 2;
+      let diff = touch_y_pos - last_touch_y_pos;
+      document.documentElement.scrollTop -= diff;
+    }
+	}
 
 	svg2.on("touchstart", svg2TouchStart)
       .on("touchmove", svg2TouchMove)
