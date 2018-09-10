@@ -74,6 +74,7 @@ function insert_hough_plots(svg1_id, svg2_id){
 
 	let data = [[5, 5, "black"]];
 	let next_idx = 0
+	let last_touch_y_pos = 0
 
 	data.forEach(p => insert_point(xScale1(p[0]), yScale1(p[1])))
 
@@ -152,6 +153,160 @@ function insert_hough_plots(svg1_id, svg2_id){
 
 	function svg1MouseLeave(){
 		d3.select("#" +  svg1_id + "-hover-line").remove();
+	}
+
+
+	svg2.on("touchstart", svg2TouchStart)
+      .on("touchmove", svg2TouchMove)
+      .on("touchend", svg2TouchEnd)
+      .on("mouseenter", svg2MouseEnter)
+      .on("mousemove", svg2MouseMove)
+      .on("mouseleave", svg2MouseLeave);
+
+
+
+	function svg2HoverSetHoverLinePos(theta, d){
+		_svg2HoverSetHoverLinePos(theta, d,
+      d3.select("#" + svg1_id + "-hover-svg1-d"),
+			d3.select("#" + svg1_id + "-hover-svg1-line"),
+			d3.select("#" + svg1_id + "-hover-svg2-d"),
+			d3.select("#" + svg1_id + "-hover-svg2-theta"),
+			d3.select("#" + svg1_id + "-hover-svg1-theta"),
+    )
+	}
+
+	function _svg2HoverSetHoverLinePos(theta, d,
+			svg1_d, svg1_line, svg2_d, svg2_theta, svg1_theta
+	){
+		var p2 = [Math.cos(theta*2*Math.PI/360)*d, Math.sin(theta*2*Math.PI/360)*d];
+    var p3 = [p2[0] + Math.cos((theta-90)*2*Math.PI/360)*30,
+              p2[1] + Math.sin((theta-90)*2*Math.PI/360)*30]
+    var p4 = [p2[0] + Math.cos((theta+90)*2*Math.PI/360)*30,
+              p2[1] + Math.sin((theta+90)*2*Math.PI/360)*30]
+    svg1_d
+        .attr("x1", xScale1(0))
+        .attr("y1", yScale1(0))
+        .attr("x2", xScale1(p2[0]))
+        .attr("y2", yScale1(p2[1]));
+    svg1_line
+        .attr("x1", xScale1(p3[0]))
+        .attr("y1", yScale1(p3[1]))
+        .attr("x2", xScale1(p4[0]))
+        .attr("y2", yScale1(p4[1]));
+    svg2_d
+        .attr("x1", xScale2(theta))
+        .attr("y1", yScale2(0))
+        .attr("x2", xScale2(theta))
+        .attr("y2", yScale2(d));
+    svg2_theta
+        .attr("x1", xScale2(0))
+        .attr("y1", yScale2(0))
+        .attr("x2", xScale2(theta))
+        .attr("y2", yScale2(0));
+    let rad = xScale1(d)-xScale1(0);
+    let offset = rad < 0 ? -90: 90;
+    svg1_theta
+        .attr("d", d3.arc()
+                     .innerRadius(Math.abs(rad))
+                     .outerRadius(Math.abs(rad))
+                     .startAngle(offset * (Math.PI/180))
+                     .endAngle((offset-theta) * (Math.PI/180))
+        ).attr("transform", "translate("+xScale1(0)+","+yScale1(0)+")")
+	}
+
+	function svg2HoverInsertLines(theta, d){
+		svg1_d = svg1.append("line")
+	     .attr("id", svg1_id + "-hover-svg1-d")
+	     .attr("stroke", "red")
+	     .attr("stroke-width", 1.5)
+	  svg1_line = svg1.append("line")
+	     .attr("id", svg1_id + "-hover-svg1-line")
+	     .attr("stroke", "#444")
+	     .attr("stroke-width", 1.5)
+	  svg2_d = svg2.append("line")
+	     .attr("id", svg1_id + "-hover-svg2-d")
+	     .attr("stroke", "red")
+	     .attr("stroke-width", 1.5)
+	  svg2_theta = svg2.append("line")
+	     .attr("id", svg1_id + "-hover-svg2-theta")
+	     .attr("stroke", "green")
+	     .attr("stroke-width", 1.5)
+	  svg1_theta = svg1.append("path")
+		   .attr("id", svg1_id + "-hover-svg1-theta")
+	     .attr("fill", "none").attr("stroke-width", 1.5)
+	     .attr("stroke", "green")
+		_svg2HoverSetHoverLinePos(theta, d,
+			svg1_d, svg1_line, svg2_d, svg2_theta, svg1_theta
+		)
+	}
+
+	function svg2HoverRemoveLines(){
+		d3.select("#" + svg1_id + "-hover-svg1-d").remove()
+		d3.select("#" + svg1_id + "-hover-svg1-line").remove()
+		d3.select("#" + svg1_id + "-hover-svg2-d").remove()
+		d3.select("#" + svg1_id + "-hover-svg2-theta").remove()
+		d3.select("#" + svg1_id + "-hover-svg1-theta").remove()
+	}
+
+  // top-level event handlers
+
+	function svg2MouseEnter(){
+		svg2HoverInsertLines(
+			xScale2.invert(d3.mouse(this)[0]),
+			yScale2.invert(d3.mouse(this)[1])
+		);
+	}
+
+	function svg2MouseMove(){
+		svg2HoverSetHoverLinePos(
+			xScale2.invert(d3.mouse(this)[0]),
+			yScale2.invert(d3.mouse(this)[1])
+		);
+	}
+
+	function svg2MouseLeave(){
+		svg2HoverRemoveLines();
+	}
+
+	function svg2TouchStart(){
+    d3.event.preventDefault();
+    d3.event.stopPropagation();
+    if (d3.touches(this).length == 1){
+      svg2HoverInsertLines(
+				xScale2.invert(d3.touches(this)[0][0]),
+				yScale2.invert(d3.touches(this)[0][1]) + 4
+			);
+    }else {
+      svg2HoverRemoveLines();
+    }
+		// two finger scrolling
+		if (d3.touches(this).length == 2){
+			let touches = d3.touches(document.documentElement)
+			last_touch_y_pos = (touches[0][1] + touches[1][1]) / 2;
+    }
+  }
+
+	function svg2TouchMove(){
+    d3.event.preventDefault();
+    d3.event.stopPropagation();
+    if (d3.touches(this).length == 1){
+      svg2HoverSetHoverLinePos(
+				xScale2.invert(d3.touches(this)[0][0]),
+				yScale2.invert(d3.touches(this)[0][1]) + 4
+			);
+    }else if (d3.touches(this).length == 2){
+			// two finger scrolling
+			let touches = d3.touches(document.documentElement)
+      let touch_y_pos = (touches[0][1] + touches[1][1]) / 2;
+      let diff = touch_y_pos - last_touch_y_pos;
+      document.documentElement.scrollTop -= diff;
+    }
+  }
+
+	function svg2TouchEnd(){
+		d3.event.preventDefault();
+    d3.event.stopPropagation();
+    svg2HoverRemoveLines();
 	}
 
 	//let svg2 = create_svg(svg2_id, color2, 400)
