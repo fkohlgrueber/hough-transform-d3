@@ -247,6 +247,10 @@ function insert_hough_plots(svg1_id, svg2_id){
     d3.event.stopPropagation();
     svg1HoverRemoveLines();
 
+		if (d3.touches(this).length == 1){
+			touch_initial_pos = [-1, -1]
+		}
+
 		if (touch_initial_pos[0] != -1 ||
 				touch_initial_pos[1] != -1
 		){
